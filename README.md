@@ -31,4 +31,5 @@
     - [no name, assigned]
     - [does not exist] 
 * [ ] restructure Asset object to be able to handle errors
+* [ ] catch other status codes/error codes from API calls (e.g "Unauthorized or unauthenticated")
 

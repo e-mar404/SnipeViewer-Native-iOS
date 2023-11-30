@@ -4,9 +4,11 @@
 
 ## To-Do\'s: 
 
-### File name
+<details>
+<summary> ### File name </summary>
+
+<br>
 
 * [ ] task to be done with that file
 * [x] task that has been completed on that file
-
-
+</details>

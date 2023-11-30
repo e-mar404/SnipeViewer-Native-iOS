@@ -1,7 +1,5 @@
 #  Snipe Viewer (Native iOS)
 
-// set up the todos in here
-
 ## To-Do\'s: 
 
 ### Template

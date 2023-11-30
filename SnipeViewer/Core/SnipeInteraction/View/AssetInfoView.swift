@@ -30,73 +30,93 @@ struct AssetInfoView: View {
     // TO-DO: make an actual alert view
     var alert: some View {
         VStack {
-            Text("this is an alert view")
+            Text("An error occured")
+                .font(.headline)
+                .padding(.bottom, 4)
+
             if status?.status == "error" {
                 Text(status?.messages ?? "")
+                    .foregroundColor(.red)
             } else {
                 Text("Message: \(alertMessage)")
+                    .foregroundColor(.red)
             }
+            
+            
+            Button {
+                dismiss()
+            } label: {
+                Text("Search another asset")
+            }
+            .padding(.top, 24)
         }
     }
     
     var body: some View {
         if let user = viewModel.currentUser {
-            VStack{
+            // make zstack to have the list view allways on the background
+            ZStack{
+                List{
+                    Section("Asset Info"){
+                        VStack(alignment: .leading) {
+                            Text("Name")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            
+                            // if there is no name REST API response is "" which means asset?.name ?? "No name" doesn't work
+                            if asset?.name == "" {
+                                Text("No name")
+                            } else {
+                                Text(asset?.name ?? "")
+                            }
+                        }
+                        VStack(alignment: .leading) {
+                            Text("Assigned To")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                            
+                            // for when theres an error (asset is nil) "not assigned to anyone" is on the background but with this it gets rid of it
+                            if asset != nil {
+                                Text(asset?.assignedTo?.name ?? "Not assigned to anyone")
+                            }
+                        }
+                    }
+                    
+                    if user.admin {
+                        Section("Actions (comming soon)"){
+                            ActionView(imageName: "gear",
+                                       title: "Check in",
+                                       tintColor: Color(.systemGray))
+                            ActionView(imageName: "gear",
+                                       title: "Check out",
+                                       tintColor: Color(.systemGray))
+                            ActionView(imageName: "gear",
+                                       title: "Rename",
+                                       tintColor: Color(.systemGray))
+                        }
+                    }
+                    
+                    Section {
+                        Button {
+                            print("search another asset")
+                            dismiss()
+                        } label: {
+                            ActionView(imageName: "arrow.left.circle.fill",
+                                       title: "Search another asset",
+                                       tintColor: .blue)
+                        }
+                    }
+                }
+                
                 if snipeVm.isLoading {
                     loadingWheel()
                     
                 } else if showErrorAlert || status?.status == "error"{
                     alert
+                        .frame(width: 200, height: 180)
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(10.0)
                     
-                } else {
-                    List{
-                        Section("Asset Info"){
-                            VStack(alignment: .leading) {
-                                Text("Name")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                
-                                // if there is no name REST API response is "" which means asset?.name ?? "No name" doesn't work
-                                if asset?.name == "" {
-                                    Text("No name")
-                                } else {
-                                    Text(asset?.name ?? "")
-                                }
-                            }
-                            VStack(alignment: .leading) {
-                                Text("Assigned To")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                
-                                Text(asset?.assignedTo?.name ?? "Not assigned to anyone")
-                            }
-                        }
-                        
-                        if user.admin {
-                            Section("Actions (comming soon)"){
-                                ActionView(imageName: "gear",
-                                           title: "Check in",
-                                           tintColor: Color(.systemGray))
-                                ActionView(imageName: "gear",
-                                           title: "Check out",
-                                           tintColor: Color(.systemGray))
-                                ActionView(imageName: "gear",
-                                           title: "Rename",
-                                           tintColor: Color(.systemGray))
-                            }
-                        }
-                        
-                        Section {
-                            Button {
-                                print("search another asset")
-                                dismiss()
-                            } label: {
-                                ActionView(imageName: "arrow.left.circle.fill",
-                                           title: "Search another asset",
-                                           tintColor: .blue)
-                            }
-                        }
-                    }
                 }
             }
             .task {
@@ -104,6 +124,13 @@ struct AssetInfoView: View {
                     (status, asset) = try await snipeVm.getAsset(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, assetTag: assetTag)
                 } catch SnipeError.codes.invalidURL {
                     alertMessage = "Invalid API URL"
+                    showErrorAlert = true
+                } catch SnipeError.codes.invalidAuthentication {
+                    alertMessage = "Invalid authentication for action"
+                    showErrorAlert = true
+                    
+                } catch SnipeError.codes.notFound{
+                    alertMessage = "Requested URL not found"
                     showErrorAlert = true
                     
                 } catch SnipeError.codes.invalidResponse {

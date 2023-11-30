@@ -51,8 +51,9 @@ struct Asset: Codable{
 struct SnipeError {
     
     enum codes: Error{
-        case invalidSetUp
         case invalidURL
+        case invalidAuthentication
+        case notFound
         case invalidResponse
         case invalidData
     }
@@ -98,8 +99,18 @@ class Snipe: ObservableObject {
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
+        // nesting 404, 401, 200
+    
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw SnipeError.codes.invalidResponse
+            let response = response as? HTTPURLResponse
+            switch response?.statusCode {
+                case 401:
+                    throw SnipeError.codes.invalidAuthentication
+                case 404:
+                    throw SnipeError.codes.notFound
+                default:
+                    throw SnipeError.codes.invalidResponse
+            }
         }
         
         do {

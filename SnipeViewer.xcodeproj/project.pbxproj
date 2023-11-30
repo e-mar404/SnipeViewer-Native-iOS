@@ -117,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				0D1F15BC2B08368A0036EAD9 /* SnipeViewer */,
+				0D4473282B17F42800C2C50F /* README.md */,
 				0D1F15BB2B08368A0036EAD9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -141,7 +142,6 @@
 				0DD536792B113FD40081F397 /* GoogleService-Info.plist */,
 				0D1F15C32B08368B0036EAD9 /* SnipeViewer.entitlements */,
 				0D1F15C42B08368B0036EAD9 /* Preview Content */,
-				0D4473282B17F42800C2C50F /* README.md */,
 			);
 			path = SnipeViewer;
 			sourceTree = "<group>";

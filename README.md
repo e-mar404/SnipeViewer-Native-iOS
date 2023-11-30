@@ -6,7 +6,7 @@
 
 ### File name
 
-* [] task to be done with that file
+* [ ] task to be done with that file
 * [x] task that has been completed on that file
 
 

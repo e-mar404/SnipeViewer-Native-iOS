@@ -45,16 +45,32 @@ struct Asset: Codable{
     let assetTag: String
     let statusLabel: StatusLabel
     let assignedTo: AssignedTo? // make optional, when asset is not checked out this property is null
-    let AvailableActions: AvailabeActions
+    let availableActions: AvailabeActions
 }
 
-
-
-enum SnipeError: Error{
-    case invalidSetUp
-    case invalidURL
-    case invalidResponse
-    case invalidData
+struct SnipeError {
+    
+    enum codes: Error{
+        case invalidSetUp
+        case invalidURL
+        case invalidResponse
+        case invalidData
+    }
+    
+    // when trying to get asset that doesnt exist the response is
+    /*
+     {
+        "status": "error",
+        "messages": "Asset does not exist",
+        "payload": null
+     }
+     */
+    
+    struct AssetStatus: Codable{
+        let status: String
+        let messages: String
+        let payload: String?
+    }
 }
 
 class Snipe: ObservableObject {
@@ -66,13 +82,13 @@ class Snipe: ObservableObject {
     
     // get asset by asset tag and return Asset object
     @MainActor
-    public func getAsset(BASE_URL: String, API_KEY: String, assetTag:String) async throws -> Asset{
+    public func getAsset(BASE_URL: String, API_KEY: String, assetTag:String) async throws -> (status: SnipeError.AssetStatus?, asset: Asset?){
         _isLoading = true
         
         let endpoint = "\(BASE_URL)hardware/bytag/\(assetTag)"
         
         guard let url = URL(string: endpoint) else {
-            throw SnipeError.invalidURL
+            throw SnipeError.codes.invalidURL
         }
         
         var request = URLRequest(url: url)
@@ -83,16 +99,26 @@ class Snipe: ObservableObject {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw SnipeError.invalidResponse
+            throw SnipeError.codes.invalidResponse
         }
-
+        
         do {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             _isLoading = false
-            return try decoder.decode(Asset.self, from: data)
+            let asset = try decoder.decode(Asset.self, from: data)
+            return (SnipeError.AssetStatus(status: "success", messages: "Able to retrieve asset successfully", payload: nil), asset)
+            
         } catch {
-            throw SnipeError.invalidData
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let status = try decoder.decode(SnipeError.AssetStatus.self, from: data)
+                return (status, nil)
+                
+            } catch {
+                throw SnipeError.codes.invalidData
+            }
         }
     }
     

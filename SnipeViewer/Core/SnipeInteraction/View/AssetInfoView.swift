@@ -11,7 +11,8 @@ struct AssetInfoView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
     @ObservedObject var snipeVm = Snipe()
-    @State var asset: Asset?
+    @State var status: SnipeError.AssetStatus? //optional so it doesnt require status and asset obj from parent view
+    @State var asset: Asset? //optional so it doesnt require status and asset obj from parent view
     @State var assetTag: String = ""
     @State var showErrorAlert:Bool = false
     @State var alertMessage: String = ""
@@ -30,7 +31,11 @@ struct AssetInfoView: View {
     var alert: some View {
         VStack {
             Text("this is an alert view")
-            Text("Message: \(alertMessage)")
+            if status?.status == "error" {
+                Text(status?.messages ?? "")
+            } else {
+                Text("Message: \(alertMessage)")
+            }
         }
     }
     
@@ -40,7 +45,7 @@ struct AssetInfoView: View {
                 if snipeVm.isLoading {
                     loadingWheel()
                     
-                } else if showErrorAlert {
+                } else if showErrorAlert || status?.status == "error"{
                     alert
                     
                 } else {
@@ -51,14 +56,19 @@ struct AssetInfoView: View {
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                                 
-                                Text(asset?.name ?? "")
+                                // if there is no name REST API response is "" which means asset?.name ?? "No name" doesn't work
+                                if asset?.name == "" {
+                                    Text("No name")
+                                } else {
+                                    Text(asset?.name ?? "")
+                                }
                             }
                             VStack(alignment: .leading) {
                                 Text("Assigned To")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                                 
-                                Text(asset?.assignedTo.name ?? "")
+                                Text(asset?.assignedTo?.name ?? "Not assigned to anyone")
                             }
                         }
                         
@@ -91,16 +101,16 @@ struct AssetInfoView: View {
             }
             .task {
                 do {
-                    asset = try await snipeVm.getAsset(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, assetTag: assetTag)
-                } catch SnipeError.invalidURL {
+                    (status, asset) = try await snipeVm.getAsset(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, assetTag: assetTag)
+                } catch SnipeError.codes.invalidURL {
                     alertMessage = "Invalid API URL"
                     showErrorAlert = true
                     
-                } catch SnipeError.invalidResponse {
+                } catch SnipeError.codes.invalidResponse {
                     alertMessage = "Got an invalid response from API server"
                     showErrorAlert = true
                     
-                } catch SnipeError.invalidData {
+                } catch SnipeError.codes.invalidData {
                     alertMessage = "Received back invalid data. Possible that asset does not exist"
                     showErrorAlert = true
                     
@@ -115,6 +125,10 @@ struct AssetInfoView: View {
 
 #Preview {
 //    AssetInfoView(asset: .constant(Asset(name: "T19-1", assignedTo: AssignedAsset(name: "Cart - T"))))
-    AssetInfoView(assetTag: "4808")
+    AssetInfoView(
+        status: SnipeError.AssetStatus(status: "accepted",
+                                      messages: "able to retrieve asset succesfully",
+                                      payload: nil),
+                assetTag: "4808")
         .environmentObject(AuthViewModel())
 }

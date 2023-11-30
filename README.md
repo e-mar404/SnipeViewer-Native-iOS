@@ -24,12 +24,14 @@
 
 ### Snipe.swift
 * [ ] restructure code to be able to add in asset actions (rename and check in/out)
-* [ ] add error handling for Snipe API
-    - [name, not assigned]
-    - [no name, not assigned]
-    - [name, assigned]
-    - [no name, assigned]
-    - [does not exist] 
-* [ ] restructure Asset object to be able to handle errors
+* [x] add error handling for Snipe API
+    - case 1: [name, not assigned]
+    - case 2: [no name, not assigned]
+    - case 3: [name, assigned]
+    - case 4: [no name, assigned]
+    - case 5: [does not exist] 
+* [x] restructure Asset object to be able to handle errors
+    - made new struct to store the status to not have a lot of props be optional in Asset
+    - getAsset func is now getAssetfunc(params) async trows -> (status: SnipeError.AssetStatus?, asset: Asset)
 * [ ] catch other status codes/error codes from API calls (e.g "Unauthorized or unauthenticated")
 

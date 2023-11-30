@@ -10,9 +10,10 @@ import CodeScanner
 
 struct InputAssetView: View {
     @EnvironmentObject var viewModel: AuthViewModel
-    @State private var isPresentingScanner = false
-    @State private var isPresentingUserProfile = false
+    @State private var isPresentingScanner: Bool = false
+    @State private var isPresentingUserProfile: Bool = false
     @State private var assetTag:String = ""
+    @State private var lookUpAssetSelection: Bool = false
     @FocusState private var isFocused
     
     
@@ -90,20 +91,25 @@ struct InputAssetView: View {
                 .padding(.top, 12)
                 
                 
+
                 NavigationLink {
                     AssetInfoView(assetTag: assetTag)
-                        .navigationBarBackButtonHidden(true)
+//                        .navigationBarBackButtonHidden(true) // commenting out while fixing alert/error messaging of AssetInfoView.swift
                         .environmentObject(viewModel)
                 } label: {
-                    Text("Look up asset")
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 10.0)
+                            .foregroundColor(.blue)
+                        Text("Look up asset")
+                            .foregroundColor(.white)
+                    }
                 }
-                .foregroundColor(.white)
                 .frame(width: UIScreen.main.bounds.width - 32, height: 48)
-                .background(Color(.systemBlue))
                 .opacity(formIsValid ? 1.0 : 0.5)
                 .disabled(!formIsValid)
-                .cornerRadius(10)
                 .padding(.top, 24)
+                
+                
                 
                 Spacer()
             }

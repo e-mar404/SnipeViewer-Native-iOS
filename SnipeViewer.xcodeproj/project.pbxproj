@@ -22,6 +22,7 @@
 		0D1F15C62B08368B0036EAD9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D1F15C52B08368B0036EAD9 /* Preview Assets.xcassets */; };
 		0D35A2152B13C82500CF94F3 /* LaunchScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35A2142B13C82500CF94F3 /* LaunchScreenViewModel.swift */; };
 		0D35A2182B13C8F400CF94F3 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D35A2172B13C8F400CF94F3 /* LaunchScreenView.swift */; };
+		0D4473292B17F42800C2C50F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0D4473282B17F42800C2C50F /* README.md */; };
 		0D8611002B0837F200BF6B07 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 0D8610FF2B0837F200BF6B07 /* CodeScanner */; };
 		0DD5367A2B113FD40081F397 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0DD536792B113FD40081F397 /* GoogleService-Info.plist */; };
 		0DFB21F22B0A7D8A00BCA1E7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 0DFB21F12B0A7D8A00BCA1E7 /* FirebaseAuth */; };
@@ -54,6 +55,7 @@
 		0D1F15CC2B08372C0036EAD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		0D35A2142B13C82500CF94F3 /* LaunchScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewModel.swift; sourceTree = "<group>"; };
 		0D35A2172B13C8F400CF94F3 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
+		0D4473282B17F42800C2C50F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0DD536792B113FD40081F397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0DFB221D2B0A7EB900BCA1E7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,6 +141,7 @@
 				0DD536792B113FD40081F397 /* GoogleService-Info.plist */,
 				0D1F15C32B08368B0036EAD9 /* SnipeViewer.entitlements */,
 				0D1F15C42B08368B0036EAD9 /* Preview Content */,
+				0D4473282B17F42800C2C50F /* README.md */,
 			);
 			path = SnipeViewer;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 			files = (
 				0DD5367A2B113FD40081F397 /* GoogleService-Info.plist in Resources */,
 				0D1F15C62B08368B0036EAD9 /* Preview Assets.xcassets in Resources */,
+				0D4473292B17F42800C2C50F /* README.md in Resources */,
 				0D1F15C22B08368B0036EAD9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

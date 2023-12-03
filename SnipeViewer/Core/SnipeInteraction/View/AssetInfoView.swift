@@ -11,6 +11,8 @@ struct AssetInfoView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AuthViewModel
     @ObservedObject var snipeVm = Snipe()
+    @State private var changeNameTo: String = ""
+    @State private var isPresentingChangeNameTo: Bool = false
     @State var status: SnipeError.AssetStatus? //optional so it doesnt require status and asset obj from parent view
     @State var asset: Asset? //optional so it doesnt require status and asset obj from parent view
     @State var assetTag: String = ""
@@ -52,6 +54,49 @@ struct AssetInfoView: View {
         }
     }
     
+    // change name sheet
+    var changeNameSheet: some View {
+        VStack {
+            InputView(text: $changeNameTo,
+                      title: "What would you like name the asset?",
+                      placeholder: "new name")
+            
+            if let user = viewModel.currentUser {
+                Button {
+                    Task {
+                        let res = try? await snipeVm.changeAssetName(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, asset: asset!, to: changeNameTo)
+                        self.isPresentingChangeNameTo = false
+                    }
+                } label: {
+                    Text("Rename Asset")
+                        .frame(width: UIScreen.main.bounds.width - 32, height: 48)
+                        .foregroundColor(.white)
+                }
+                .background(Color(.systemBlue))
+                .cornerRadius(10)
+                .padding(.top, 24)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.top, 12)
+    }
+    
+    // open change name
+    var openChangeName: some View {
+        Button {
+            self.isPresentingChangeNameTo = true
+            print("rename pressed")
+        } label: {
+            ActionView(imageName: "gear",
+                       title: "Rename",
+                       tintColor
+                       : Color(.systemGray))
+        }
+        .sheet(isPresented: $isPresentingChangeNameTo, content: {
+            self.changeNameSheet
+        })
+    }
+    
     var body: some View {
         if let user = viewModel.currentUser {
             // make zstack to have the list view allways on the background
@@ -90,9 +135,8 @@ struct AssetInfoView: View {
                             ActionView(imageName: "gear",
                                        title: "Check out",
                                        tintColor: Color(.systemGray))
-                            ActionView(imageName: "gear",
-                                       title: "Rename",
-                                       tintColor: Color(.systemGray))
+                            
+                            openChangeName
                         }
                     }
                     

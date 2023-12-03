@@ -41,7 +41,8 @@ struct Asset: Codable{
     }
     
     // properties of Asset
-    let name: String
+    let id: Int
+    var name: String
     let assetTag: String
     let statusLabel: StatusLabel
     let assignedTo: AssignedTo? // make optional, when asset is not checked out this property is null
@@ -53,9 +54,10 @@ struct SnipeError {
     enum codes: Error{
         case invalidURL
         case invalidAuthentication
-        case notFound
         case invalidResponse
+        case invalidId
         case invalidData
+        case notFound
     }
     
     // when trying to get asset that doesnt exist the response is
@@ -121,6 +123,7 @@ class Snipe: ObservableObject {
             return (SnipeError.AssetStatus(status: "success", messages: "Able to retrieve asset successfully", payload: nil), asset)
             
         } catch {
+            _isLoading = false
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -134,7 +137,7 @@ class Snipe: ObservableObject {
     }
     
     // change name of asset
-    // POST
+    // PATCH (parially update a specific asset)
     /*
      params:
         - BASE_URL: String
@@ -144,7 +147,49 @@ class Snipe: ObservableObject {
      return:
         - result: Bool (is operation was succesful)
      */
-    
+    @MainActor
+    public func changeAssetName(BASE_URL: String, API_KEY: String, asset: Asset, to: String) async throws -> Bool {
+        _isLoading = true
+        
+        let endpoint = "\(BASE_URL)hardware/\(asset.id)"
+        
+        guard let url = URL(string: endpoint) else {
+            throw SnipeError.codes.invalidURL
+        }
+        
+        // set up json to send
+        var updatedAsset = asset
+        updatedAsset.name = to
+        
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let jsonData = try? encoder.encode(updatedAsset)
+        
+        // request with headers
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(API_KEY)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "content-type")
+        request.httpMethod = "PATCH"
+        request.httpBody = jsonData
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw SnipeError.codes.invalidResponse
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            _isLoading = false
+            let status = try decoder.decode(SnipeError.AssetStatus.self, from: data)
+            return status.status == "success"
+
+        } catch {
+            throw SnipeError.codes.invalidData
+        }
+    }
     //--------------------------------------------------------------------------------
     
     // check in/out

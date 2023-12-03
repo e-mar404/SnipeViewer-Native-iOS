@@ -21,10 +21,13 @@
 
 ### AssetInfoView.swift
 * [x] work on alert/error message when error is thrown from Snipe.getAsset()
+* [x] add text view to rename asset
+* [ ] error handling for changeName to sheet
 
 ### Snipe.swift
 * [ ] restructure code to be able to add in asset actions (rename and check in/out)
     - added part of the pseudo code for each action
+* [x] changeNameTo()
 * [x] add error handling for Snipe API
     - case 1: [name, not assigned]
     - case 2: [no name, not assigned]

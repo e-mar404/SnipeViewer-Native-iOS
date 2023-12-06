@@ -63,7 +63,7 @@ struct LoginView: View {
                     Task{
                         do {
                             try await viewModel.signIn(withEmail: email, password: password)
-                        } catch AuthViewError.internalError{
+                        } catch AuthViewError.internalError{ // when email or password is wrong the overall error is an .internalError (but the message says "invalid_credentials") cant seem to get to the message of the error thrown by firebase so will just generalize .internalError to this
                             errorDetails = "Internal Error. Double check email & password"
                             showErrorAlert = true
                             print("Internal error while signing in")
@@ -107,11 +107,11 @@ struct LoginView: View {
     }
 }
 
-
+// will use to make sure to only accept emails for the email field and that the password is > 7 (which is already a requirement for firebase) this is just to give user the best chance to sign in
 extension LoginView: AuthenticationFormProtocol {
     var formIsValid: Bool {
         return !email.isEmpty
-        && email.contains("@")
+        && email.contains("@") // rule to only allow users from "@ourdomain.org" in firebase everyone else cant read or write (no one can write)
         && !password.isEmpty
         && password.count > 7
     }

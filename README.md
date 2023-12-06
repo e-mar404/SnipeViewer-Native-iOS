@@ -13,7 +13,7 @@
 </details>
 
 ### Project wide:
-* [ ] comment code 
+* [x] comment code 
 * [ ] widget to open app from lock screen
 
 ### LoginView.swift
@@ -22,10 +22,10 @@
 ### AssetInfoView.swift
 * [x] work on alert/error message when error is thrown from Snipe.getAsset()
 * [x] add text view to rename asset
-* [ ] error handling for changeName to sheet
+* [ ] error handling for changeNameTo sheet
 
 ### Snipe.swift
-* [ ] restructure code to be able to add in asset actions (rename and check in/out)
+* [x] restructure code to be able to add in asset actions (rename and check in/out)
     - added part of the pseudo code for each action
 * [x] changeNameTo()
 * [x] add error handling for Snipe API

@@ -17,6 +17,8 @@ struct InputView: View {
     
     
     var securedFieldView: some View {
+        // visibility depending on "eye" button
+        // cant change secureField to show text so new TextField shows ontop of it with the same binding $text
         Group {
             SecureField(placeholder, text: $text)
                 .font(.system(size: 14))

@@ -29,7 +29,6 @@ struct AssetInfoView: View {
             .padding(.top, 24)
     }
     
-    // TO-DO: make an actual alert view
     var alert: some View {
         VStack {
             Text("An error occured")
@@ -54,14 +53,14 @@ struct AssetInfoView: View {
         }
     }
     
-    // change name sheet
+    // ui for changing name of asset
     var changeNameSheet: some View {
         VStack {
             InputView(text: $changeNameTo,
                       title: "What would you like name the asset?",
                       placeholder: "new name")
             
-            if let user = viewModel.currentUser {
+            if let user = viewModel.currentUser { // need to have user signed in to get their API key
                 Button {
                     Task {
                         let res = try? await snipeVm.changeAssetName(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, asset: asset!, to: changeNameTo)
@@ -81,7 +80,7 @@ struct AssetInfoView: View {
         .padding(.top, 12)
     }
     
-    // open change name
+    // button to open sheet
     var openChangeName: some View {
         Button {
             self.isPresentingChangeNameTo = true
@@ -99,7 +98,7 @@ struct AssetInfoView: View {
     
     var body: some View {
         if let user = viewModel.currentUser {
-            // make zstack to have the list view allways on the background
+            // make zstack to have the list view always on the background
             ZStack{
                 List{
                     Section("Asset Info"){
@@ -108,7 +107,7 @@ struct AssetInfoView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             
-                            // if there is no name REST API response is "" which means asset?.name ?? "No name" doesn't work
+                            // if there is no name, name = "" in JSON file which means asset.name is never nil, so we have to check maually to see if asset has a name
                             if asset?.name == "" {
                                 Text("No name")
                             } else {
@@ -127,15 +126,17 @@ struct AssetInfoView: View {
                         }
                     }
                     
+                    // these actions are only available to admins since they interact with the Snipe IT API
                     if user.admin {
                         Section("Actions (comming soon)"){
+                            // Not set up yet
                             ActionView(imageName: "gear",
                                        title: "Check in",
                                        tintColor: Color(.systemGray))
                             ActionView(imageName: "gear",
                                        title: "Check out",
                                        tintColor: Color(.systemGray))
-                            
+                            // already set up
                             openChangeName
                         }
                     }
@@ -152,6 +153,7 @@ struct AssetInfoView: View {
                     }
                 }
                 
+                // loading wheel has to be at the end so it can show at the top of the view
                 if snipeVm.isLoading {
                     loadingWheel()
                     
@@ -163,7 +165,7 @@ struct AssetInfoView: View {
                     
                 }
             }
-            .task {
+            .task { // .task runs at the creationg of the view
                 do {
                     (status, asset) = try await snipeVm.getAsset(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, assetTag: assetTag)
                 } catch SnipeError.codes.invalidURL {
@@ -197,9 +199,9 @@ struct AssetInfoView: View {
 #Preview {
 //    AssetInfoView(asset: .constant(Asset(name: "T19-1", assignedTo: AssignedAsset(name: "Cart - T"))))
     AssetInfoView(
-        status: SnipeError.AssetStatus(status: "accepted",
-                                      messages: "able to retrieve asset succesfully",
-                                      payload: nil),
+                status: SnipeError.AssetStatus(status: "accepted",
+                                               messages: "able to retrieve asset succesfully",
+                                               payload: nil),
                 assetTag: "4808")
         .environmentObject(AuthViewModel())
 }

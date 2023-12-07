@@ -128,16 +128,11 @@ struct AssetInfoView: View {
                     
                     // these actions are only available to admins since they interact with the Snipe IT API
                     if user.admin {
-                        Section("Actions (comming soon)"){
-                            // Not set up yet
-                            ActionView(imageName: "gear",
-                                       title: "Check in",
-                                       tintColor: Color(.systemGray))
-                            ActionView(imageName: "gear",
-                                       title: "Check out",
-                                       tintColor: Color(.systemGray))
-                            // already set up
+                        Section("Actions (more coming soon)"){
                             openChangeName
+                            // depend on allowed actions (found in Asset.availableActions.checkin/checkout)
+                            // check in
+                            // check out
                         }
                     }
                     

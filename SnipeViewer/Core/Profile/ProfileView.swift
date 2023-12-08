@@ -12,7 +12,6 @@ struct ProfileView: View {
     
     var signOut: some View {
         Button {
-            print("signing out...")
             viewModel.signOut()
         } label: {
             ActionView(imageName: "arrow.left", title: "Sign Out", tintColor: .red)
@@ -21,9 +20,9 @@ struct ProfileView: View {
     }
     
     var body: some View {
+        // will only show a profile if there is a current signed in user (should be if they get to this view)
         if let user = viewModel.currentUser {
             List {
-                // Name
                 Section {
                     HStack {
                         Text(user.initials)
@@ -47,11 +46,12 @@ struct ProfileView: View {
                     }
                 }
                 
+                // role assigned to user
                 Section ("General"){
                     Text(user.admin ? "Role: admin" : "Role: non-admin")
                 }
                 
-                //sign out button
+                // sign out button
                 Section ("Actions") {
                     signOut
                 }

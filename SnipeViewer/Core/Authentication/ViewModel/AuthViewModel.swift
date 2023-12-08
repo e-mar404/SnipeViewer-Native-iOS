@@ -30,6 +30,7 @@ class AuthViewModel: ObservableObject {
     init() {
         self.userSession = Auth.auth().currentUser
         
+        // need to run when initialized to see if there is already a user session ongoing
         Task {
             await fetchUser()
         }
@@ -61,7 +62,7 @@ class AuthViewModel: ObservableObject {
         do {
             try Auth.auth().signOut()
             self.userSession = nil
-            self.currentUser = nil
+            self.currentUser = nil // even though this is a local var we need to set to nil just so it doesnt go to cache and cause issues later
         } catch {
             print("DEBUG: Failed to sign out with error \(error.localizedDescription)")
         }

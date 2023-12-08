@@ -10,12 +10,13 @@ import CodeScanner
 
 struct InputAssetView: View {
     @EnvironmentObject var viewModel: AuthViewModel
-    @State private var isPresentingScanner = false
-    @State private var isPresentingUserProfile = false
+    @State private var isPresentingScanner: Bool = false
+    @State private var isPresentingUserProfile: Bool = false
+    @State private var lookUpAssetSelection: Bool = false
     @State private var assetTag:String = ""
     @FocusState private var isFocused
     
-    
+    // open profile ciew as a sheet
     var profileSheet: some View {
         ProfileView()
             .environmentObject(viewModel)
@@ -38,6 +39,10 @@ struct InputAssetView: View {
         })
     }
     
+    /*
+     Note: after the scanner gets the code from a valid barcode it updates the assetTag var but does not submit it to AssetInfoView. The user has to manually click "look up assset".
+     */
+    // open the scanner as a sheet
     var scannerSheet: some View {
         CodeScannerView(codeTypes: [.code128]) { result in
             if case let .success(code) =  result {
@@ -90,20 +95,25 @@ struct InputAssetView: View {
                 .padding(.top, 12)
                 
                 
+
                 NavigationLink {
                     AssetInfoView(assetTag: assetTag)
-                        .navigationBarBackButtonHidden(true)
+//                        .navigationBarBackButtonHidden(true) // commenting out while fixing alert/error messaging of AssetInfoView.swift
                         .environmentObject(viewModel)
                 } label: {
-                    Text("Look up asset")
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 10.0)
+                            .foregroundColor(.blue)
+                        Text("Look up asset")
+                            .foregroundColor(.white)
+                    }
                 }
-                .foregroundColor(.white)
                 .frame(width: UIScreen.main.bounds.width - 32, height: 48)
-                .background(Color(.systemBlue))
                 .opacity(formIsValid ? 1.0 : 0.5)
                 .disabled(!formIsValid)
-                .cornerRadius(10)
                 .padding(.top, 24)
+                
+                
                 
                 Spacer()
             }
@@ -111,6 +121,7 @@ struct InputAssetView: View {
     }
 }
 
+// for validation, cant make to only accept 4 digit asset tags because we have some with more than 4 but our min is 4
 extension InputAssetView: AssetFormProtocol {
     var formIsValid: Bool {
         return assetTag.count >= 4

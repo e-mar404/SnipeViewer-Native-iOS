@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// component used to be the view of any action buttons in a List view
 struct ActionView: View {
     let imageName: String
     let title: String

@@ -56,6 +56,7 @@
 		0D35A2142B13C82500CF94F3 /* LaunchScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewModel.swift; sourceTree = "<group>"; };
 		0D35A2172B13C8F400CF94F3 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		0D4473282B17F42800C2C50F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		0DA41AD12B236E7600207B2D /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		0DD536792B113FD40081F397 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0DFB221D2B0A7EB900BCA1E7 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -117,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				0D1F15BC2B08368A0036EAD9 /* SnipeViewer */,
+				0DA41AD12B236E7600207B2D /* LICENSE.md */,
 				0D4473282B17F42800C2C50F /* README.md */,
 				0D1F15BB2B08368A0036EAD9 /* Products */,
 			);

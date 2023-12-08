@@ -10,9 +10,10 @@ import Firebase
 
 @main
 struct SnipeViewerApp: App {
-    @StateObject var viewModel = AuthViewModel()
-    @StateObject var launchScreenState = LaunchScreenViewModel()
-    
+    @StateObject var viewModel = AuthViewModel() // view models for current user session
+    @StateObject var launchScreenState = LaunchScreenViewModel() // view model for launch screen
+        
+    // need to start the firebase sdk when launching the app
     init() {
         FirebaseApp.configure()
     }

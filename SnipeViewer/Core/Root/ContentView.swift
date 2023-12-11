@@ -17,10 +17,14 @@ struct ContentView: View {
     var body: some View {
         Group {
             // only show log in page if there is no saved current user session
-            if viewModel.userSession != nil {
-                InputAssetView()
-            } else {
-                LoginView()
+//            if viewModel.userSession != nil {
+//                InputAssetView()
+//            } else {
+//                LoginView()
+//            }
+            switch viewModel.state {
+                case .signedIn: HomeView()
+                case .signedOut: GoogleLoginView()
             }
         }
         .task{

@@ -10,7 +10,7 @@ import Foundation
 /*
  Note:
  
- all of the properties under Asset that are in camelCase are in snake_case on the JSON response. Make sure to use JSONDecoder() .convertFromSnakeCase
+ all of the properties under Asset that are in camelCase are in snake_case on the JSON response. Make sure to use JSONDecoder().convertFromSnakeCase
  */
 struct SnipeData: Codable {
     let API_KEY: String
@@ -148,7 +148,7 @@ class Snipe: ObservableObject {
         - result: Bool (is operation was succesful)
      */
     @MainActor
-    public func changeAssetName(BASE_URL: String, API_KEY: String, asset: Asset, to: String) async throws -> Bool {
+    public func changeAssetName(BASE_URL: String, API_KEY: String, asset: Asset, to: String) async throws -> Bool{
         _isLoading = true
         
         let endpoint = "\(BASE_URL)hardware/\(asset.id)"
@@ -185,7 +185,6 @@ class Snipe: ObservableObject {
             _isLoading = false
             let status = try decoder.decode(SnipeError.AssetStatus.self, from: data)
             return status.status == "success"
-
         } catch {
             throw SnipeError.codes.invalidData
         }

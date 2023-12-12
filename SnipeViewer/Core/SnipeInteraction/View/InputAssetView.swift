@@ -16,7 +16,7 @@ struct InputAssetView: View {
     @State private var assetTag:String = ""
     @FocusState private var isFocused
     
-    // open profile ciew as a sheet
+    // open profile view as a sheet
     var profileSheet: some View {
         ProfileView()
             .environmentObject(viewModel)
@@ -98,7 +98,7 @@ struct InputAssetView: View {
 
                 NavigationLink {
                     AssetInfoView(assetTag: assetTag)
-//                        .navigationBarBackButtonHidden(true) // commenting out while fixing alert/error messaging of AssetInfoView.swift
+                        .navigationBarBackButtonHidden(true)
                         .environmentObject(viewModel)
                 } label: {
                     ZStack{
@@ -112,8 +112,6 @@ struct InputAssetView: View {
                 .opacity(formIsValid ? 1.0 : 0.5)
                 .disabled(!formIsValid)
                 .padding(.top, 24)
-                
-                
                 
                 Spacer()
             }

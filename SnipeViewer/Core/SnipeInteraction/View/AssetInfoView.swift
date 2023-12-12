@@ -63,8 +63,26 @@ struct AssetInfoView: View {
             if let user = viewModel.currentUser { // need to have user signed in to get their API key
                 Button {
                     Task {
-                        let res = try? await snipeVm.changeAssetName(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, asset: asset!, to: changeNameTo)
-                        self.isPresentingChangeNameTo = false
+                        do {
+                            let res = try await snipeVm.changeAssetName(BASE_URL: user.BASE_URL, API_KEY: user.API_KEY, asset: asset!, to: changeNameTo)
+                            
+                            if res {
+                                print("error when changing name: ")
+                            }
+                            
+                            self.isPresentingChangeNameTo = false
+                        } catch SnipeError.codes.invalidURL {
+                            print("Invalid URL")
+                            
+                        } catch SnipeError.codes.invalidResponse {
+                            print("Received an invalid response by the API")
+                            
+                        } catch SnipeError.codes.invalidData {
+                            print("Reveived invalid data by API")
+                            
+                        } catch {
+                            print("Unknown error occured")
+                        }
                     }
                 } label: {
                     Text("Rename Asset")
@@ -192,7 +210,6 @@ struct AssetInfoView: View {
 }
 
 #Preview {
-//    AssetInfoView(asset: .constant(Asset(name: "T19-1", assignedTo: AssignedAsset(name: "Cart - T"))))
     AssetInfoView(
                 status: SnipeError.AssetStatus(status: "accepted",
                                                messages: "able to retrieve asset succesfully",

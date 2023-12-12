@@ -50,7 +50,7 @@ struct ProfileView: View {
                 Section ("General"){
                     Text(user.admin ? "Role: admin" : "Role: non-admin")
                 }
-                
+                    
                 // sign out button
                 Section ("Actions") {
                     signOut
@@ -62,4 +62,5 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
+        .environmentObject(AuthViewModel())
 }

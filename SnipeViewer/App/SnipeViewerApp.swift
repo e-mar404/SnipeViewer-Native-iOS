@@ -15,7 +15,7 @@ struct SnipeViewerApp: App {
         
     // need to start the firebase sdk when launching the app
     init() {
-        FirebaseApp.configure()
+        setupAuthentication()
     }
     
     var body: some Scene {
@@ -29,5 +29,11 @@ struct SnipeViewerApp: App {
                 }
             }.environmentObject(launchScreenState)
         }
+    }
+}
+
+extension SnipeViewerApp {
+    private func setupAuthentication() {
+        FirebaseApp.configure()
     }
 }
